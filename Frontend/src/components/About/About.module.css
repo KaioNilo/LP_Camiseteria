@@ -1,0 +1,7 @@
+.about {
+  background-color: #4E9689;
+  height: 100px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
