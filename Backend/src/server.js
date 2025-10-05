@@ -5,32 +5,27 @@ import cors from "cors";
 import SimulationRoutes from "./routes/SimulationRoutes.js";
 import ProductRoutes from "./routes/ProductRoutes.js";
 
+/// Inicializando o Express
 const app = express();
 
-// Porta configurável via .env
+/// Porta configurável via .env
 const PORT = process.env.PORT || 5000;
 
-// Conexão MongoDB
+/// Conexão MongoDB
 connectDB();
 
-// Middlewares globais
+/// Middlewares globais
 app.use(express.json()); 
 app.use(cors());
 
-// Rotas da API
-app.get("/", (req, res) => {
-  res.send("🚀 API está rodando...");
-});
-
-
-// Consumindo API dos Correios pelo CEP
+/// Consumindo API dos Correios pelo CEP
 const limpaCEP = (cep) => cep.replace(/(\D)/g, ''); // remover tudo que não é número
 
 const eNumero = (num) => /^[0-9]+$/.test(num); //verificação se contém apenas números
 
 const cepValido = (cep) => cep.length === 8 && eNumero(cep); // verificação se contém 8 digitos e somente números
 
-// Função Buscar CEP
+/// Função Buscar CEP
 const buscaCEP = async (req, res) => {
   const cep = limpaCEP(req.params.cep);
 
@@ -52,17 +47,39 @@ const buscaCEP = async (req, res) => {
 cep.addEventListener("focusout", buscaCEP); // Chamar a função ao perder o foco
 
 
-// Rota de CEP
-app.get("/cep/:cep", buscaCEP);
+//// Rotas da API
 
 // Rotas de Módulos
 app.use("/api/produtos", ProductRoutes);
 app.use("/api/frete", SimulationRoutes);
 
+// Rotas Simulação de Frete
+// Rota Busca de CEP
+app.get("/cep/:cep", buscaCEP);
 
-// Iniciar servidor
+
+// Rotas de Produtos
+// Rota Busca de Produtos
+app.get("/produtos", ProductRoutes);
+
+// Rota Busca de Produto por ID
+app.get("/produtos/:id", ProductRoutes);
+
+// Rotas de Criação
+app.post("/produtos", ProductRoutes);
+
+// Rotas de Atualização
+app.put("/produtos/:id", ProductRoutes);
+
+// Rotas de Exclusão
+app.delete("/produtos/:id", ProductRoutes);
+
+
+
+/// Iniciar servidor
 app.listen(PORT, () => {
   console.log(`✅ Servidor rodando na porta ${PORT}`);
 });
 
+/// Exportando o servidor
 export default app;
