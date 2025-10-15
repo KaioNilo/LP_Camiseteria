@@ -50,4 +50,6 @@ const simulationSchema = new mongoose.Schema({
 // Índice para buscas por CEP mais recente
 simulationSchema.index({ cep: 1, date: -1 });
 
-export default mongoose.model("Simulation", simulationSchema);
+const Simulation = mongoose.model("Simulation", simulationSchema);
+
+export default Simulation;

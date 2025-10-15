@@ -1,10 +1,14 @@
-import { Product } from '../models/Product.js';
+import Product from '../models/productModel.js'; 
 
 //  Rota de busca todos
 export const getProducts = async (req, res) => {
     try {
         const products = await Product.find({});
-        res.status(200).json(products);
+        const productsJSON = products.map(p => ({
+            ...p.toObject(),
+            price: p.price.toString()
+        }));
+        res.status(200).json(productsJSON);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
